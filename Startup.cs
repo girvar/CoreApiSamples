@@ -31,7 +31,9 @@ namespace CoreApiSamples
             services.AddTransient<IPatientService, PatientService>();
             
             services.Configure<TenantSettings>(Configuration.GetSection(nameof(TenantSettings)));
-            services.AddAndMigrateTenantDatabases(Configuration);
+
+            services.AddAndMigrateTenantDatabases<PatientDbContext>(Configuration);
+            //services.MigrateDbContext<PatientDbContext>(Configuration);
             //services.AddDbContext<PatientDbContext>(SetupDb);
         }
 
