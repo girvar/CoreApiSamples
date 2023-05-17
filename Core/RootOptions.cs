@@ -2,6 +2,11 @@
 
 namespace CoreApiSamples.Core
 {
+    public class RootOptions
+    {
+        public TenantSettings TenantSettings { get; set; }
+    }
+
     public class TenantSettings
     {
         public Configuration Defaults { get; set; }
@@ -18,5 +23,7 @@ namespace CoreApiSamples.Core
     public class Configuration
     {
         public string DBProvider { get; set; }
+        public string HangfireConnection { get; set; }
     }
+
 }

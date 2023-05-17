@@ -5,7 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Linq;
 
-namespace CoreApiSamples.Infra
+namespace CoreApiSamples.Extensions
 {
     public static class ServiceCollectionExtensions
     {

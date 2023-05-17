@@ -1,7 +1,16 @@
 # Sample to show multitenancy
+- Single application catering to multiple tenant
+- Support hangfire for application. ToDo: Add tenant specific hangfire database & queue
 
 ## Db connections
-Uses windows authentication. Databases are created & migrations done on start
+- API DB: Uses windows authentication. Databases are created & migrations done on application start
+- Hangfire DB: Create database using below command
+IF  NOT EXISTS (SELECT * FROM sys.databases WHERE name = N'HangfireDb')
+BEGIN
+    CREATE DATABASE [HangfireDb]
+    
+END
+	
 
 ## Adding migrations
 cd "\CoreApiSamples\Repositories\"

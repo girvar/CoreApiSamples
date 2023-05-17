@@ -1,7 +1,8 @@
 ﻿using CoreApiSamples.Core;
-using CoreApiSamples.Infra;
+using CoreApiSamples.Extensions;
 using CoreApiSamples.Repositories;
 using CoreApiSamples.Services;
+using Hangfire;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -14,31 +15,41 @@ namespace CoreApiSamples
 {
     public class Startup
     {
+        private readonly IConfiguration _configuration;
+        private readonly TenantSettings _tenantSettings;
+        private readonly RootOptions _rootOptions;
         public Startup(IConfiguration configuration)
         {
-            Configuration = configuration;
+            _configuration = configuration;
+            _rootOptions = _configuration.Get<RootOptions>();
+            _tenantSettings = _rootOptions.TenantSettings;
         }
 
-        public IConfiguration Configuration { get; }
+        
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSingleton(_configuration);
+            //services.Configure<TenantSettings>(options => _configuration.Get<TenantSettings>());
             services.AddHttpContextAccessor();
             services.AddControllers();
             services.AddTransient<ITenantService, TenantService>();
             services.AddTransient<IPatientRepository, PatientRepository>();
             services.AddTransient<IPatientService, PatientService>();
             
-            services.Configure<TenantSettings>(Configuration.GetSection(nameof(TenantSettings)));
+            services.Configure<TenantSettings>(_configuration.GetSection(nameof(TenantSettings)));
 
-            services.AddAndMigrateTenantDatabases<PatientDbContext>(Configuration);
-            //services.MigrateDbContext<PatientDbContext>(Configuration);
-            //services.AddDbContext<PatientDbContext>(SetupDb);
+            services.AddAndMigrateTenantDatabases<PatientDbContext>(_configuration);
+            services.ConfigureQueue(_tenantSettings);
+            services.AddHangfireServer();
+            //services.MigrateDbContext<PatientDbContext>(Configuration); //Old
+            //services.AddDbContext<PatientDbContext>(SetupDb); //Old
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        //public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IBackgroundJobClient backgroundJobs)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IBackgroundJobClient backgroundJobs)
         {
             if (env.IsDevelopment())
             {
@@ -47,7 +58,7 @@ namespace CoreApiSamples
 
             using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
             {
-                //MigrateDbContext<PatientDbContext>(serviceScope);
+                //MigrateDbContext<PatientDbContext>(serviceScope); //Old
             }
 
             app.UseRouting();
@@ -59,6 +70,8 @@ namespace CoreApiSamples
                 endpoints.MapControllers();
             });
 
+            app.UseHangfireDashboard("/api/hangfire");
+            backgroundJobs.Enqueue(() => Console.WriteLine("Hello world from Hangfire!"));
         }
 
         private void SetupDb(DbContextOptionsBuilder options)

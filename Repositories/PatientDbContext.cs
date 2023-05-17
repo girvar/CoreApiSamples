@@ -4,14 +4,16 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CoreApiSamples.Repositories
 {
-    public class PatientDbContext : DbContext
+    public class PatientDbContext : MultitenantDbContext //: DbContext
     {
-        private readonly ITenantService _tenantService;
-        public PatientDbContext(DbContextOptions<PatientDbContext> options, ITenantService tenantService)
-           : base(options)
-        {
-            _tenantService = tenantService;
-        }
+        //private readonly ITenantService _tenantService;
+
+        public PatientDbContext(DbContextOptions<PatientDbContext> options, ITenantService tenantContext) : base(options, tenantContext) { }
+        //public PatientDbContext(DbContextOptions<PatientDbContext> options, ITenantService tenantService)
+        //   : base(options)
+        //{
+        //    _tenantService = tenantService;
+        //}
 
         public DbSet<Patient> Patients { get; set; }
 
@@ -27,17 +29,17 @@ namespace CoreApiSamples.Repositories
                 .IsUnique();
         }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            var tenantConnectionString = _tenantService.GetConnectionString();
-            if (!string.IsNullOrEmpty(tenantConnectionString))
-            {
-                var DBProvider = _tenantService.GetDatabaseProvider();
-                if (DBProvider.ToLower() == "mssql") //ToDo: Check
-                {
-                    optionsBuilder.UseSqlServer(_tenantService.GetConnectionString());
-                }
-            }
-        }
+        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        //{
+        //    var tenantConnectionString = _tenantService.GetConnectionString();
+        //    if (!string.IsNullOrEmpty(tenantConnectionString))
+        //    {
+        //        var DBProvider = _tenantService.GetDatabaseProvider();
+        //        if (DBProvider.ToLower() == "mssql") //ToDo: Check
+        //        {
+        //            optionsBuilder.UseSqlServer(_tenantService.GetConnectionString());
+        //        }
+        //    }
+        //}
     }
 }
