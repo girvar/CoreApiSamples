@@ -10,5 +10,11 @@ dotnet ef migrations add Patient_Initial -s .. --project .. --context PatientCon
 # Run application
 dotnet run
 
-# Use Postman
+# Local Development
+## Use Postman
 Use collection in postman to get request
+
+## Use Curl
+curl -X GET http://localhost:6000/api/patients -H "tenant:mdacc"
+
+curl -X POST -H "Content-Type: application/json" -H "tenant:mdacc" -d "{\"ID1\": \"MD-001\", \"firstName\": \"mdacc_firstname1\", \"lastName\": \"mdacc_lastname1\", \"dateOfBirth\": null, \"sex\": 0}" http://localhost:6000/api/patients

@@ -9,18 +9,10 @@
     }
   },
   "profiles": {
-    "IIS Express": {
-      "commandName": "IISExpress",
-      "launchBrowser": true,
-      "launchUrl": "samples/api/samples/values",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      }
-    },
     "CoreApiSamples": {
       "commandName": "Project",
-      "launchBrowser": true,
-      "launchUrl": "api/samples/values",
+      "launchBrowser": false,
+      "launchUrl": "api/patients",
       "applicationUrl": "https://localhost:6001;http://localhost:6000",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
