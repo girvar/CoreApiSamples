@@ -33,16 +33,17 @@ namespace CoreApiSamples
             services.AddSingleton(_configuration);
             //services.Configure<TenantSettings>(options => _configuration.Get<TenantSettings>());
             services.AddHttpContextAccessor();
-            services.AddControllers();
+            
             services.AddTransient<ITenantService, TenantService>();
             services.AddTransient<IPatientRepository, PatientRepository>();
             services.AddTransient<IPatientService, PatientService>();
+            services.AddScoped<IHangfireService, HangfireService>();
             
             services.Configure<TenantSettings>(_configuration.GetSection(nameof(TenantSettings)));
 
             services.AddAndMigrateTenantDatabases<PatientDbContext>(_configuration);
             services.ConfigureQueue(_tenantSettings);
-            services.AddHangfireServer();
+            services.AddControllers();
             //services.MigrateDbContext<PatientDbContext>(Configuration); //Old
             //services.AddDbContext<PatientDbContext>(SetupDb); //Old
         }
@@ -70,8 +71,7 @@ namespace CoreApiSamples
                 endpoints.MapControllers();
             });
 
-            app.UseHangfireDashboard("/api/hangfire");
-            backgroundJobs.Enqueue(() => Console.WriteLine("Hello world from Hangfire!"));
+            app.UseHangfireDashboard();
         }
 
         private void SetupDb(DbContextOptionsBuilder options)

@@ -1,6 +1,6 @@
 # Sample to show multitenancy
 - Single application catering to multiple tenant
-- Support hangfire for application. ToDo: Add tenant specific hangfire database & queue
+- Support hangfire for application. Added tenant specific hangfire queue
 
 ## Db connections
 - API DB: Uses windows authentication. Databases are created & migrations done on application start
@@ -24,6 +24,6 @@ dotnet run
 Use collection in postman to get request
 
 ## Use Curl
-curl -X GET http://localhost:6000/api/patients -H "tenant:mdacc"
+curl -X GET http://localhost:6001/api/patients -H "tenant:mdacc"
 
-curl -X POST -H "Content-Type: application/json" -H "tenant:mdacc" -d "{\"ID1\": \"MD-001\", \"firstName\": \"mdacc_firstname1\", \"lastName\": \"mdacc_lastname1\", \"dateOfBirth\": null, \"sex\": 0}" http://localhost:6000/api/patients
+curl -X POST -H "Content-Type: application/json" -H "tenant:mdacc" -d "{\"ID1\": \"MD-001\", \"firstName\": \"mdacc_firstname1\", \"lastName\": \"mdacc_lastname1\", \"dateOfBirth\": null, \"sex\": 0}" http://localhost:6001/api/patients

@@ -23,12 +23,12 @@
 					}
 				],
 				"url": {
-					"raw": "http://localhost:6000/api/patients",
+					"raw": "http://localhost:6001/api/patients",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "6000",
+					"port": "6001",
 					"path": [
 						"api",
 						"patients"
@@ -89,12 +89,12 @@
 					"raw": "{\r\n\t\"ID1\": \"UP-001\",\r\n    \"firstName\": \"UP-Firstname1\",\r\n    \"lastName\": \"UP-Lastname1\",\r\n    \"dateOfBirth\": null,\r\n    \"sex\": 0\r\n}"
 				},
 				"url": {
-					"raw": "http://localhost:6000/api/patients",
+					"raw": "http://localhost:6001/api/patients",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "6000",
+					"port": "6001",
 					"path": [
 						"api",
 						"patients"
@@ -124,12 +124,12 @@
 					"raw": "{\r\n\t\"ID1\": \"BETA-001\",\r\n    \"firstName\": \"mdacc_firstname1\",\r\n    \"lastName\": \"mdacc_lastname1\",\r\n    \"dateOfBirth\": null,\r\n    \"sex\": 0\r\n}"
 				},
 				"url": {
-					"raw": "http://localhost:6000/api/patients",
+					"raw": "http://localhost:6001/api/patients",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "6000",
+					"port": "6001",
 					"path": [
 						"api",
 						"patients"
