@@ -9,20 +9,23 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System;
+using Microsoft.Extensions.Logging;
 
 namespace CoreApiSamples
 {
     public class Startup
     {
         private readonly IConfiguration _configuration;
-        private readonly TenantSettings _tenantSettings;
         private readonly RootOptions _rootOptions;
-        public Startup(IConfiguration configuration)
+        private readonly TenantSettings _tenantSettings;
+        private readonly ILogger<Startup> _logger;
+
+        public Startup(IConfiguration configuration, ILogger<Startup> logger)
         {
             _configuration = configuration;
             _rootOptions = _configuration.Get<RootOptions>();
             _tenantSettings = _rootOptions.TenantSettings;
+            _logger = logger;
         }
 
         
@@ -35,8 +38,8 @@ namespace CoreApiSamples
             services.AddHttpContextAccessor();
             
             services.AddTransient<ITenantService, TenantService>();
-            services.AddTransient<IPatientRepository, PatientRepository>();
-            services.AddTransient<IPatientService, PatientService>();
+            services.AddScoped<IPatientRepository, PatientRepository>();
+            services.AddScoped<IPatientService, PatientService>();
             services.AddScoped<IHangfireService, HangfireService>();
             
             services.Configure<TenantSettings>(_configuration.GetSection(nameof(TenantSettings)));
@@ -44,6 +47,18 @@ namespace CoreApiSamples
             services.AddAndMigrateTenantDatabases<PatientDbContext>(_configuration);
             services.ConfigureQueue(_tenantSettings);
             services.AddControllers();
+            services.AddHostedService<MyBackgroundService>();
+
+            // Register the per-tenant background service
+            services.AddSingleton<ITenantBackgroundService, TenantBackgroundService>();
+            //services.AddScoped<ITenantBackgroundService, TenantBackgroundService>();
+
+            // Register the background service factory
+            services.AddSingleton<ITenantBackgroundServiceFactory, TenantBackgroundServiceFactory>();
+
+            // Register the background service manager
+            services.AddSingleton<IHostedService, BackgroundServiceManager>();
+
             //services.MigrateDbContext<PatientDbContext>(Configuration); //Old
             //services.AddDbContext<PatientDbContext>(SetupDb); //Old
         }
@@ -54,6 +69,7 @@ namespace CoreApiSamples
         {
             if (env.IsDevelopment())
             {
+                _logger.LogInformation(@"Env is development.");
                 app.UseDeveloperExceptionPage();
             }
 

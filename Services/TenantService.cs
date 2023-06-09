@@ -38,6 +38,13 @@ namespace CoreApiSamples.Services
             }
         }
 
+        public TenantSettings TenantSettings 
+        {
+            get
+            {
+                return _tenantSettings;
+            }
+        }
 
         public string GetConnectionString()
         {
@@ -49,7 +56,7 @@ namespace CoreApiSamples.Services
             return _tenantSettings.Defaults?.DBProvider;
         }
 
-        public Tenant GetTenant()
+        public Tenant GetCurrentTenant()
         {
             return _currentTenant;
         }

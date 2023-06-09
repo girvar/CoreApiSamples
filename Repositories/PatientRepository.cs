@@ -11,6 +11,7 @@ namespace CoreApiSamples.Repositories
         IReadOnlyList<Patient> GetAll();
         Patient GetByIdentity(Guid identity, bool asNoTracking = default);
         void Put(Patient patient);
+        long GetPatientsCount();
     }
 
     public class PatientRepository : IPatientRepository
@@ -40,6 +41,11 @@ namespace CoreApiSamples.Repositories
         {
             _patientContext.Patients.Add(patient);
             _patientContext.SaveChanges();
+        }
+
+        public long GetPatientsCount()
+        {
+            return _patientContext.Patients.Count();
         }
     }
 }

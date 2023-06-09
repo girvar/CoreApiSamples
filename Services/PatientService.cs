@@ -4,6 +4,14 @@ using System.Collections.Generic;
 
 namespace CoreApiSamples.Services
 {
+    public interface IPatientService
+    {
+        IReadOnlyList<Patient> GetAll();
+        Patient GetByIdentity(Guid identity);
+        Patient CreatePatient(Patient patient);
+        long GetPatientsCount();
+    }
+
     public class PatientService : IPatientService
     {
         private readonly IPatientRepository _repository;
@@ -29,14 +37,13 @@ namespace CoreApiSamples.Services
         {
             return _repository.GetByIdentity(identity);
         }
+
+        public long GetPatientsCount()
+        {
+            return _repository.GetPatientsCount();
+        }
     }
 
-    public interface IPatientService
-    {
-        IReadOnlyList<Patient> GetAll();
-        Patient GetByIdentity(Guid identity);
-        Patient CreatePatient(Patient patient);
-    }
 
     public class Patient
     {

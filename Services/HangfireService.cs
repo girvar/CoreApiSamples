@@ -1,5 +1,6 @@
 ﻿using CoreApiSamples.Core;
 using Hangfire;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 
@@ -15,14 +16,16 @@ namespace CoreApiSamples.Services
     public class HangfireService : IHangfireService
     {
         private readonly ITenantService _tenantService;
-        public HangfireService(ITenantService tenantService) 
+        private readonly ILogger<HangfireService> _logger;
+        public HangfireService(ITenantService tenantService, ILogger<HangfireService> logger) 
         {
             _tenantService = tenantService;
+            _logger = logger;
         }
         public void CreateRecurringJob()
         {
-            string tenantId = _tenantService.GetTenant().TenantId;
-            Console.WriteLine($"Adding recurring job to tenant -> {tenantId}...");
+            string tenantId = _tenantService.GetCurrentTenant().TenantId;
+            _logger.LogInformation($"Adding recurring job to tenant -> {tenantId}...");
             RecurringJob.AddOrUpdate(() => Console.WriteLine($"This is per minute recurring Job using hangfire for tenant {tenantId}"), Cron.Minutely, null, tenantId);
         }
 
@@ -35,5 +38,4 @@ namespace CoreApiSamples.Services
         {
         }
     }
-
 }

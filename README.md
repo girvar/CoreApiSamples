@@ -1,6 +1,7 @@
 # Sample to show multitenancy
 - Single application catering to multiple tenant
-- Support hangfire for application. Added tenant specific hangfire queue
+- Support hangfire for application with tenant specific hangfire queue
+- Support for running background service for each tenant
 
 ## Db connections
 - API DB: Uses windows authentication. Databases are created & migrations done on application start
@@ -11,7 +12,6 @@ BEGIN
     
 END
 	
-
 ## Adding migrations
 cd "\CoreApiSamples\Repositories\"
 dotnet ef migrations add Patient_Initial -s .. --project .. --context PatientContext -o Repositories/Migrations/Patient
